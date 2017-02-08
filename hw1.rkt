@@ -28,7 +28,7 @@
 
 ;; bool -> bool
 (define (notp a)
-  (if a #f a))
+  (if a #f #t))
 
 ;; {bool, bool} -> bool
 (define (xorp a b)
