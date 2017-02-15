@@ -126,10 +126,10 @@
 ;; [a] -> [[a]]
 (define (sublists lst)
   (if (empty? lst) '(())
-    (append 
-      (map 
+    (append
+      (map
         (lambda (x) (cons (car lst) x))
-        (sublists (cdr lst))) 
+        (sublists (cdr lst)))
       (sublists (cdr lst)))))
 
 (define e1
@@ -149,7 +149,7 @@
 (define (foldC f1 f2 f3 f4 f5 e)
   (match e
     [(list 'const a) (f1 a)]
-    [(list 'add b c) (f2 (foldC f1 f2 f3 f4 f5 b) 
+    [(list 'add b c) (f2 (foldC f1 f2 f3 f4 f5 b)
                          (foldC f1 f2 f3 f4 f5 c))]
     [(list 'sub b c) (f3 (foldC f1 f2 f3 f4 f5 b)
                          (foldC f1 f2 f3 f4 f5 c))]
@@ -160,7 +160,7 @@
 
 ;; calc -> num
 (define (numAdd e)
-  (foldC 
+  (foldC
     (lambda (x) 0)
     (lambda (x y) (+ 1 x y))
     (lambda (x y) (+ x y))
@@ -168,12 +168,12 @@
     (lambda (x y) (+ x y))
     e))
 
-(define e3 
+(define e3
   '(add (sub (add (const 2) (const 3)) (const 6)) (add (const 4) (const 2))))
 
 ;; calc -> calc
 (define (replaceAddWithMult e)
-  (foldC 
+  (foldC
     (lambda (x) (list 'const x))
     (lambda (x y) (list 'mult x y))
     (lambda (x y) (list 'sub  x y))
