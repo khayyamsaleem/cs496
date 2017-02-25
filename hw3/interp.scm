@@ -67,47 +67,56 @@
         ;; Extensions follow
         (minus-exp (exp1)
           (let ((val1 (value-of exp1 env)))
-            (let ((num1 (exp-val->num val1)))
-              (num-val (* val1 -1)))))
+            (let ((num1 (expval->num val1)))
+              (num-val (- num1)))))
 
         (add-exp (exp1 exp2)
           (let ((val1 (value-of exp1 env))
                 (val2 (value-of exp2 env)))
-            (let ((num1 (exp-val->num val1))
-                  (num2 (exp-val->num val2)))
+            (let ((num1 (expval->num val1))
+                  (num2 (expval->num val2)))
               (num-val
                 (+ num1 num2)))))
 
         (mult-exp (exp1 exp2)
           (let ((val1 (value-of exp1 env))
                 (val2 (value-of exp2 env)))
-            (let ((num1 (exp-val->num val1))
-                  (num2 (exp-val->num val2)))
+            (let ((num1 (expval->num val1))
+                  (num2 (expval->num val2)))
               (num-val
                 (* num1 num2)))))
 
         (div-exp (exp1 exp2)
           (let ((val1 (value-of exp1 env))
                 (val2 (value-of exp2 env)))
-            (let ((num1 (exp-val->num val1))
-                  (num2 (exp-val->num val2)))
+            (let ((num1 (expval->num val1))
+                  (num2 (expval->num val2)))
               (num-val
                 (/ num1 num2)))))
 
         (cons-exp (exp1 exp2)
-                       (write "implement me!"))
+          (let ((val1 (value-of exp1 env))
+                (val2 (value-of exp2 env)))
+            (cons-expval val1 val2)))
+
 
         (car-exp (e1)
-                       (write "implement me!"))
+          (let ((val1 (value-of e1 env)))
+            (let ((list1 (expval->list val1)))
+              (car list1))))
 
         (cdr-exp (e1)
-                       (write "implement me!"))
+         (let ((val1 (value-of e1 env)))
+            (let ((list1 (expval->list val1)))
+              (list-val (cdr list1)))))
                  
         (null-exp (exp1)
-                       (write "implement me!"))
+          (let ((val1 (value-of exp1 env)))
+            (let ((list1 (expval->list val1)))
+              (bool-val (null? list1)))))
       
         (emptylist-exp ()
-                       (write "implement me!"))
+         (list-val '()))
 
 ))))       
   
