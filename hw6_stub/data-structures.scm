@@ -22,6 +22,10 @@
                          (tu-val
                            (tag symbol?)
                            (args (list-of expval?)))
+                         (unit-val)
+                         (pair-val
+                           (fst expval?)
+                           (snd expval?))
 
                          )
 

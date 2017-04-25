@@ -82,6 +82,21 @@
        ("for" identifier "=" expression "to" expression "(" expression ")")
        for-exp)
 
+      ;; from document spec for T-explicit refs
+      (expression
+        ("unitE")
+        unit-exp)
+
+      (expression
+        ("pair"
+         "(" expression "," expression ")")
+        pair-exp)
+
+      (expression
+        ("unpair" "(" identifier "," identifier ")" "=" expression
+                  "in" expression)
+        unpair-exp)
+
       
       ;; ADTs
 
@@ -118,6 +133,19 @@
       (type
        ("(" type "->" type ")")
        proc-type)
+
+      ;;; added from t-explicit-refs document spec ;;;
+      (type
+        ("unit")
+        unit-type)
+
+      (type 
+        ("ref" "(" type ")")
+        ref-type)
+
+      (type
+        ("<" type "*" type ">")
+        pair-type)
       
       ))
 
@@ -143,7 +171,15 @@
       (cases type ty
         (var-type (v) 'var)
         (int-type () 'int)
+        (pair-type (fst snd)
+                   (append
+                     (list '<)
+                     (list (type-to-external-form fst))
+                     (list '*)
+                     (list (type-to-external-form snd))
+                     (list '>)))
         (bool-type () 'bool)
+        (unit-type () 'unit)
         (proc-type (arg-type result-type)
                    (list
                     (type-to-external-form arg-type)
