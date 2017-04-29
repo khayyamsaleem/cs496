@@ -112,7 +112,7 @@
                       (let ((v2 (value-of exp2 env)))
                         (begin
                           (setref! ref v2)
-                          (num-val 23)))))
+                          (unit-val)))))
 
         (for-exp (var lbe ube exp1)
                  (let* ((v1 (value-of lbe env))
@@ -129,8 +129,67 @@
                                  (value-of exp1 env2)
                                  )
                           )
-                        (num-val 23))))
+                        (unit-val))))
+
+        (unit-exp () (unit-val))
+
+        (pair-exp (e1 e2)
+                  (pair-val (value-of e1 env) (value-of e2 env)))
+
+        (unpair-exp (val1 val2 e body)
+                    (value-of body
+                              (extend-env val1 (expval->fst (value-of e env))
+                                          (extend-env val2 (expval->snd (value-of e env)) env))))
+
+
+        ;;;;; LIST STUFF HERE ;;;
+
+        (cons-exp (e1 e2)
+           (let ((v1 (value-of e1 env))
+                 (v2 (value-of e2 env)))
+             (cons-expval v1 v2)))
+
+        (car-exp (e1)
+            (let ((v1 (value-of e1 env)))
+              (let ((l1 (expval->list v1)))
+                (list-val (cdr (l1))))))
+
+        (cdr-exp (e1)
+          (let ((v1 (value-of e1 env)))
+            (let ((l1 (expval->list v1)))
+              (list-val (cdr l1)))))
+        
+        (null-exp (e1)
+          (let ((v1 (value-of e1 env)))
+            (let ((l1 (expval->list v1)))
+              (bool-val (null? l1)))))
+
+        (emptylist-exp (list-val '()))
+
+
+        ;;;; TREE STUFF ;;;;;
+
+        (emptytree-exp (t) (emptytree-val t))
+
+       (node-exp (e l r)
+         (let ((e-val (value-of e env))
+               (l-val (value-of l env))
+               (r-val (value-of r env)))
+           (tree-val (node-t e-val l-val r-val))))
+
+        (nullT-exp (write "nah"))
+
+        (getData-exp (write "nah"))
+
+        (getLST-exp (write "nah"))
+
+        (getRST-exp (write "nah"))
+       
+        
+
         )))
+
+  
 
   ;; apply-procedure : Proc * ExpVal -> ExpVal
   ;; 
