@@ -119,7 +119,7 @@
                         (varRef (newref v1))
                         (env2 (extend-env var (ref-val varRef) env))
                         (v2 (value-of ube env2)))
-                   ( if (<= (expval->num v1) (expval->num v2)) 
+                   (if (<= (expval->num v1) (expval->num v2)) 
                         (do ((i (expval->num v1) (+ i 1)))
                           ((= i (+ 1 (expval->num v2))) )   
                           (begin (setref! varRef (num-val i))
@@ -130,20 +130,16 @@
                                  )
                           )
                         (unit-val))))
-
+        
         (unit-exp () (unit-val))
 
-        (pair-exp (e1 e2)
-                  (pair-val (value-of e1 env) (value-of e2 env)))
+        (pair-exp (exp1 exp2)
+                  (pair-val (value-of exp1 env) (value-of exp2 env)))
 
-        (unpair-exp (val1 val2 e body)
-                    (value-of body
-                              (extend-env val1 (expval->fst (value-of e env))
-                                          (extend-env val2 (expval->snd (value-of e env)) env))))
-
-
-        ;;;;; LIST STUFF HERE ;;;
-
+       (unpair-exp (id1 id2 exp1 body)
+                   (value-of body
+                             (extend-env id2 (expval->snd (value-of exp1 env))  (extend-env id1 (expval->fst (value-of exp1 env)) env))))
+        
         (cons-exp (e1 e2)
            (let ((v1 (value-of e1 env))
                  (v2 (value-of e2 env)))
@@ -158,38 +154,42 @@
           (let ((v1 (value-of e1 env)))
             (let ((l1 (expval->list v1)))
               (list-val (cdr l1)))))
-        
+                 
         (null-exp (e1)
           (let ((v1 (value-of e1 env)))
             (let ((l1 (expval->list v1)))
               (bool-val (null? l1)))))
-
-        (emptylist-exp (list-val '()))
-
-
-        ;;;; TREE STUFF ;;;;;
-
-        (emptytree-exp (t) (emptytree-val t))
-
-       (node-exp (e l r)
-         (let ((e-val (value-of e env))
-               (l-val (value-of l env))
-               (r-val (value-of r env)))
-           (tree-val (node-t e-val l-val r-val))))
-
-        (nullT-exp (write "nah"))
-
-        (getData-exp (write "nah"))
-
-        (getLST-exp (write "nah"))
-
-        (getRST-exp (write "nah"))
-       
         
+        (emptylist-exp (t)
+                       (list-val '()))
+
+        (emptytree-exp (t)
+                       (emptytree-val t))
+        (nullT-exp (t)
+                   (let ((val (value-of t env)))
+                     (cases expval val
+                       (emptytree-val (t) (bool-val #t))
+                       (else (bool-val #f)))))
+
+        (node-exp (d l r)
+         (let ((data (value-of d env))
+               (lst (value-of l env))
+               (rst (value-of r env)))
+           (node-val data lst rst)))
+
+        (getData-exp (exp1)
+                     (let ((n (value-of exp1 env)))
+                       (expval->elem n)))
+
+        (getLST-exp (exp1)
+                     (let ((n (value-of exp1 env)))
+                       (expval->left n)))
+
+        (getRST-exp (exp1)
+                     (let ((n (value-of exp1 env)))
+                       (expval->right n)))
 
         )))
-
-  
 
   ;; apply-procedure : Proc * ExpVal -> ExpVal
   ;; 

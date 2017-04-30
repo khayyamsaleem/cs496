@@ -82,6 +82,10 @@
        ("for" identifier "=" expression "to" expression "(" expression ")")
        for-exp)
 
+      (expression
+        ("unitE")
+        unit-exp)
+
       (type
        ("int")
        int-type)
@@ -93,6 +97,85 @@
       (type
        ("(" type "->" type ")")
        proc-type)
+
+      (type
+        ("unit")
+        unit-type)
+
+      (type
+        ("ref" "(" type ")")
+        ref-type)
+
+      ;; PAIRS 
+
+      (type
+        ("<" type "*" type ">")
+        pair-type)
+
+      (expression
+        ("pair"
+         "(" expression "," expression ")")
+        pair-exp)
+
+      (expression
+        ("unpair" "(" identifier "," identifier ")" "=" expression "in" expression)
+        unpair-exp)
+
+      ;; LISTS
+
+      (expression
+        ("emptylist" type)
+        emptylist-exp)
+
+      (expression
+        ("cons" "(" expression "," expression ")")
+        cons-exp)
+
+      (expression
+        ("null?" "(" expression ")")
+        null-exp)
+
+      (expression
+        ("car" "(" expression ")")
+        car-exp)
+
+      (expression
+        ("cdr" "(" expression ")")
+        cdr-exp)
+
+      (type
+        ("list" "(" type ")")
+        list-type)
+
+      ;; TREES
+  
+       (expression
+       ("emptytree" type)
+       emptytree-exp)
+
+      (expression
+       ("node" "(" expression "," expression "," expression ")")
+       node-exp)
+
+      (expression
+       ("nullT?" expression)
+       nullT-exp)
+
+      (expression
+       ("getData" expression)
+       getData-exp)
+
+      (expression
+       ("getLST" expression)
+       getLST-exp)
+
+      (expression
+       ("getRST" expression)
+       getRST-exp)
+
+      (type
+       ("tree" "(" type ")")
+       tree-type)
       
       ))
 
@@ -118,6 +201,32 @@
       (cases type ty
         (int-type () 'int)
         (bool-type () 'bool)
+        (unit-type () 'unit)
+        (pair-type (fst snd)
+                   (append
+                     (list '<)
+                     (list (type-to-external-form fst))
+                     (list '*)
+                     (list (type-to-external-form snd))
+                     (list '>)))
+
+        (tree-type (t)
+            (list
+            'tree
+             (type-to-external-form t)))
+        
+
+        (list-type (e)
+                   (list
+                    'list
+                    (type-to-external-form e)))
+
+        (ref-type (e)
+                  (list
+                   'ref
+                   (type-to-external-form e)))
+
+
         (proc-type (arg-type result-type)
                    (list
                     (type-to-external-form arg-type)

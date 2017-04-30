@@ -2,7 +2,9 @@
 
   (require "lang.scm")                  ; for expression?
   (require "store.scm")                 ; for reference?
-
+  
+  (require racket/contract/base)        ; for list-of
+  
   (provide (all-defined-out))               ; too many things to list
 
 ;;;;;;;;;;;;;;;; expressed values ;;;;;;;;;;;;;;;;
@@ -19,6 +21,18 @@
       (proc proc?))
     (ref-val
       (ref reference?))
+    (list-val
+      (list (listof expval?)))
+    (node-val
+      (data expval?)
+      (left expval?)
+      (right expval?))
+    (emptytree-val
+      (emptytree type?))
+    (unit-val)
+    (pair-val
+      (fst expval?)
+      (snd expval?))
     )
 
 ;;; extractors:
@@ -46,6 +60,56 @@
       (cases expval v
 	(ref-val (ref) ref)
 	(else (expval-extractor-error 'reference v)))))
+
+  (define expval->fst
+    (lambda (v)
+      (cases expval v
+             (pair-val (e1 e2) e1)
+             (else (expval-extractor-error 'pairFst v)))))
+
+  (define expval->elem
+    (lambda (v)
+      (cases expval v
+        (node-val (e l r) e)
+        (else (expval-extractor-error 'node v)))))
+
+  (define expval->left
+    (lambda (v)
+      (cases expval v
+        (node-val (e l r) l)
+        (else (expval-extractor-error 'node v)))))
+
+  (define expval->right
+    (lambda (v)
+      (cases expval v
+        (node-val (e l r) r)
+        (else (expval-extractor-error 'node v)))))
+
+  (define cons-expval
+    (lambda (v xs)
+      (let ((ls (expval->list xs)))
+        (list-val (cons v ls)))))
+
+  (define expval->snd
+    (lambda (v)
+      (cases expval v
+             (pair-val (e1 e2) e2)
+             (else (expval-extractor-error 'pairSnd v)))))
+
+  (define expval->list
+    (lambda (v)
+      (cases expval v
+        (list-val (list) list)
+        (else (expval-extractor-error 'list v)))))
+
+  ;;; trees
+
+  (define-datatype bTree bTree?
+    (node-t
+     (key expval?)
+     (left bTree?)
+     (right bTree?)))
+  
 
   (define expval-extractor-error
     (lambda (variant value)
