@@ -116,8 +116,7 @@
                       (let ((v2 (value-of exp2 env)))
                         (begin
                           (setref! ref v2)
-                          ;;;;;need to update, i think;;;;;
-                          (unit-val)))))
+                          (num-val 23)))))
 
         (for-exp (var lbe ube exp1)
                  (let* ((v1 (value-of lbe env))
@@ -134,12 +133,9 @@
                                  (value-of exp1 env2)
                                  )
                           )
-                        ;;;;;; needs to be updated ;;;;;;;
-                        (unit-val))))
+                        (num-val 23))))
         
-        (constr-exp (id args) 
-                (let ((vals (map (lambda (e) (value-of e env)) args)))
-                  (tu-val id vals)))
+        (constr-exp (id args) (eopl:error "not implemented!"))
         
         (type-exp (id conss paramss) (eopl:error "not implemented!"))
         
