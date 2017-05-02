@@ -158,19 +158,19 @@
        node-exp)
 
       (expression
-       ("nullT?" expression)
+       ("nullT?" "(" expression ")")
        nullT-exp)
 
       (expression
-       ("getData" expression)
+       ("getData" "(" expression ")")
        getData-exp)
 
       (expression
-       ("getLST" expression)
+       ("getLST" "(" expression ")")
        getLST-exp)
 
       (expression
-       ("getRST" expression)
+       ("getRST" "(" expression ")")
        getRST-exp)
 
       (type
