@@ -136,9 +136,10 @@
         (pair-exp (exp1 exp2)
                   (pair-val (value-of exp1 env) (value-of exp2 env)))
 
-       (unpair-exp (id1 id2 exp1 body)
+       (unpair-exp (x y z body)
                    (value-of body
-                             (extend-env id2 (expval->snd (value-of exp1 env))  (extend-env id1 (expval->fst (value-of exp1 env)) env))))
+                             (extend-env y (expval->snd (value-of z env))
+                                         (extend-env x (expval->fst (value-of z env)) env))))
         
         (cons-exp (e1 e2)
            (let ((v1 (value-of e1 env))
